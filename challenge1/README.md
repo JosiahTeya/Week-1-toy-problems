@@ -1,0 +1,1 @@
+the function first prompts the user to input student marks and converts the input to a floating-point number using parseFloat(). Then it checks whether the input is valid (i.e., between 0 and 100). If the input is valid, it checks the mark against different grade boundaries using a series of if-else statements and returns the corresponding grade. 
