@@ -1,0 +1,67 @@
+header {
+	background-color: #333;
+	color: white;
+	padding: 1em;
+}
+
+header h1 {
+	margin: 0;
+}
+
+main {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+section {
+	flex: 1;
+	padding: 1em;
+}
+
+#animals-list {
+	background-color: #f0f0f0;
+}
+
+#animals-list h2 {
+	margin-top: 0;
+}
+
+#animals {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.animal {
+	flex-basis: 33%;
+	margin: 1em;
+	border: 1px solid #ccc;
+	padding: 0.5em;
+}
+
+.animal:hover {
+	background-color: #f9f9f9;
+	cursor: pointer;
+}
+
+.animal img {
+	max-width: 100%;
+}
+
+#animal-details {
+	background-color: #fff;
+}
+
+#animal-details h2 {
+	margin-top: 0;
+}
+
+#animal img {
+	max-width: 100%;
+}
+
+#animal-votes {
+	font-size: 1.5em;
+}

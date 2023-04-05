@@ -1,47 +1,63 @@
-const animalsList = document.getElementById('animals-list');
-const animalDetails = document.getElementById('animal-details');
+const API_URL = 'http://localhost:3000/characters';
 
-// fetch all animals
-fetch('http://localhost:3000/characters')
-  .then(response => response.json())
-  .then(data => {
-    data.forEach(animal => {
-      const animalItem = document.createElement('li');
-      animalItem.textContent = animal.name;
-      animalItem.addEventListener('click', () => {
-        showAnimalDetails(animal.id);
-      });
-      animalsList.appendChild(animalItem);
-    });
-  });
+const animalsListElem = document.getElementById('animals');
+const animalDetailsElem = document.getElementById('animal');
 
-// fetch animal details and display them
-function showAnimalDetails(animalId) {
-  fetch(`http://localhost:3000/characters/${animalId}`)
-    .then(response => response.json())
-    .then(animal => {
-      const animalDetailsHtml = `
-        <h2>${animal.name}</h2>
-        <img src="${animal.image}" alt="${animal.name}">
-        <p>Votes: ${animal.votes}</p>
-        <button onclick="addVote(${animal.id})">Add Vote</button>
-      `;
-      animalDetails.innerHTML = animalDetailsHtml;
-    });
+function fetchAnimals() {
+	fetch(API_URL)
+		.then(response => response.json())
+		.then(animals => {
+			animals.forEach(animal => {
+				const animalElem = createAnimalElem(animal);
+				animalsListElem.appendChild(animalElem);
+			});
+		});
 }
 
-// add a vote for an animal and update the display
-function addVote(animalId) {
-  fetch(`http://localhost:3000/characters/${animalId}`)
-    .then(response => response.json())
-    .then(animal => {
-      animal.votes++;
-      const animalDetailsHtml = `
-        <h2>${animal.name}</h2>
-        <img src="${animal.image}" alt="${animal.name}">
-        <p>Votes: ${animal.votes}</p>
-        <button onclick="addVote(${animal.id})">Add Vote</button>
-      `;
-      animalDetails.innerHTML = animalDetailsHtml;
-    });
+function createAnimalElem(animal) {
+	const animalElem = document.createElement('li');
+	animalElem.className = 'animal';
+	animalElem.dataset.id = animal.id;
+	animalElem.innerHTML = `
+		<h3>${animal.name}</h3>
+		<img src="${animal.image}" alt="${animal.name}">
+		<p>${animal.votes} votes</p>
+	`;
+	animalElem.addEventListener('click', () => {
+		showAnimalDetails(animal);
+	});
+	return animalElem;
 }
+
+function showAnimalDetails(animal) {
+	animalDetailsElem.innerHTML = `
+		<h3>${animal.name}</h3>
+		<img src="${animal.image}" alt="${animal.name}">
+		<p id="animal-votes">${animal.votes} votes</p>
+		<button id="vote-button">Vote</button>
+	`;
+	const voteButtonElem = document.getElementById('vote-button');
+	voteButtonElem.addEventListener('click', () => {
+		animal.votes++;
+		const animalVotesElem = document.getElementById('animal-votes');
+		animalVotesElem.textContent = `${animal.votes} votes`;
+        updateAnimalVotes(animal);
+        });
+        }
+        
+function updateAnimalVotes(animal) {
+      fetch(`${API_URL}/${animal.id}`, {
+        method: 'PUT',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(animal)
+        })
+        .then(response => response.json())
+        .then(updatedAnimal => {
+        console.log(`Votes for ${updatedAnimal.name} updated to ${updatedAnimal.votes}`);
+        })
+        .catch(error => console.error('Error updating animal votes:', error));
+        }
+        
+        fetchAnimals();
